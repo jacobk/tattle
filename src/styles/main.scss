@@ -2,9 +2,17 @@
 @import '~bootstrap/scss/bootstrap-flex.scss';
 // @import '~bootstrap-sass/assets/stylesheets/bootstrap/_mixins.scss';
 // @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+@import '~loaders.css/loaders.css';
 
 // can add Boostrap overrides, additional Sass/CSS below...
 
 body {
   margin-top: 1rem;
+}
+
+.loader-inner {
+  text-align: center;
+  div {
+    background: orange;
+  }
 }

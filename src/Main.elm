@@ -3,6 +3,7 @@ import Html.Attributes exposing (..)
 import Html.App
 import Html.Events exposing ( onInput, onClick )
 import Http
+import Ports exposing (..)
 import String
 import Task
 --import Platform.Sub
@@ -18,6 +19,10 @@ main =
         , view = view
         , update = update
         , subscriptions = always Sub.none }
+
+
+
+
 
 
 init : (Model, Cmd Msg)
@@ -45,7 +50,8 @@ type alias AccessToken =
 type alias Model =
     { accessToken: AccessToken
     , isValidatingAccessToken: Bool
-    , hasValidAccessToken: Bool
+    , hasValidAccessToken: Maybe Bool
+    , tokenValidationFailureReason: Maybe String
     }
 
 
@@ -53,7 +59,8 @@ initialModel : Model
 initialModel =
     { accessToken = AccessToken "" ""
     , isValidatingAccessToken = False
-    , hasValidAccessToken = False
+    , hasValidAccessToken = Nothing
+    , tokenValidationFailureReason = Nothing
     }
 
 
@@ -64,20 +71,9 @@ type Msg
     = ChangeUsername Username
     | ChangeToken Token
     | SaveAccessToken
-    | AccessTokenValidationFailed TokenValidationError
-    | ValidAccesToken Bool
+    | TokenValidationFailed String
+    | TokenValidationSuccess Bool
 
-
-type TokenValidationError
-    = Invalid
-    | InvalidOther String
-
-
---updateAccessToken model prop
---    let
---        accessToken = model.accessToken
---    in
---        {}
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -86,7 +82,8 @@ update msg model =
         let
             accessToken = model.accessToken
         in
-            ({model | accessToken = { accessToken | username = username }}, Cmd.none)
+            {model | accessToken = { accessToken | username = username }}
+                ! [localStorage username]
 
     ChangeToken token ->
         let
@@ -95,21 +92,31 @@ update msg model =
             ({model | accessToken = { accessToken | token = token }}, Cmd.none)
 
     SaveAccessToken ->
-        (model, verifyAccessTokenTask model.accessToken)
+        { model
+            | isValidatingAccessToken = True
+            , hasValidAccessToken = Nothing
+        } ! [verifyAccessTokenTask model.accessToken]
 
-    AccessTokenValidationFailed a ->
-        ({model | hasValidAccessToken = False }, Cmd.none)
+    TokenValidationFailed reason ->
+        { model
+            | isValidatingAccessToken = False
+            , hasValidAccessToken = Just False
+            , tokenValidationFailureReason = Just reason
+        } ! []
 
-    ValidAccesToken a ->
-        ({model | hasValidAccessToken = True }, Cmd.none)
+    TokenValidationSuccess isValid ->
+        { model
+            | isValidatingAccessToken = False
+            , hasValidAccessToken = Just isValid
+         } ! []
 
 
 verifyAccessTokenTask : AccessToken -> Cmd Msg
 verifyAccessTokenTask accessToken =
     let
+        -- no CORS atm
+        --"https://api.mblox.com/xms/v1/" ++ accessToken.username ++ "/groups"
         url =
-            -- no CORS atm
-            --"https://api.mblox.com/xms/v1/" ++ accessToken.username ++ "/groups"
             "/xms/v1/" ++ accessToken.username ++ "/groups"
         authHeader = "Bearer " ++ accessToken.token
         request =
@@ -120,21 +127,21 @@ verifyAccessTokenTask accessToken =
             }
 
         promoteError _ =
-            InvalidOther "foo"
+            "Request failed"
 
-        handleVerifyTokenResp : Http.Response -> Task.Task TokenValidationError Bool
+        handleVerifyTokenResp : Http.Response -> Task.Task String Bool
         handleVerifyTokenResp response =
             if response.status == 200 then
                 Task.succeed True
             else if response.status == 401 then
-                Task.fail Invalid
+                Task.succeed False
             else
-                Task.fail (InvalidOther "bar")
+                Task.fail "Unexpected response code"
 
     in
         Task.mapError promoteError (Http.send Http.defaultSettings request)
             `Task.andThen` handleVerifyTokenResp
-            |> Task.perform AccessTokenValidationFailed ValidAccesToken
+            |> Task.perform TokenValidationFailed TokenValidationSuccess
 
 
 -- VIEW
@@ -152,27 +159,17 @@ view model =
                 [ class "card"]
                 [ div
                     [ class "card-block" ]
-                    [ h3 [ class "card-title" ] [ text "Login" ]
-                    , h4 [ class "card-subtitle text-muted"] [ text "Provide credentials"]
+                    [ h4 [ class "card-subtitle text-muted"] [ text "Provide credentials"]
                     ]
                 , div
                     [ class "card-block" ]
                     [ div
                         []
-                        [ accessTokenInput "Username" "username" ChangeUsername
-                        , accessTokenInput "Access Token" "token" ChangeToken
+                        [ accessTokenInput "Service username" "username" model.accessToken.username ChangeUsername
+                        , accessTokenInput "Access Token" "token" model.accessToken.token ChangeToken
                         , saveButton model
+                        , statusRow model
                         , accessTokenStatus model
-                        ]
-                    , div
-                        [ class "card card-block"]
-                        [ dl
-                            []
-                            [ dt [ class "col-sm-3" ] [ text "Username" ]
-                            , dd [ class "col-sm-6"] [ text model.accessToken.username ]
-                            , dt [ class "col-sm-3"] [ text "Access Token" ]
-                            , dd [ class "col-sm-6"] [ text model.accessToken.token ]
-                            ]
                         ]
                     ]
                 ]
@@ -181,8 +178,8 @@ view model =
     ]
 
 
-accessTokenInput : String -> String -> (String -> Msg) -> Html Msg
-accessTokenInput labelVal idVal msg =
+accessTokenInput : String -> String -> String -> (String -> Msg) -> Html Msg
+accessTokenInput labelVal idVal val msg =
     fieldset [ class "form-group" ]
         [ label
             [ class "", for idVal ]
@@ -192,6 +189,7 @@ accessTokenInput labelVal idVal msg =
             , id idVal
             , type' "text"
             , autocomplete False
+            , value val
             , onInput msg ]
             []
         ]
@@ -211,18 +209,49 @@ saveButton model =
                 [ button
                     [ class "btn btn-primary btn-lg form-control"
                     , onClick SaveAccessToken ]
-                    [ text "Save" ]
+                    [ text "Set Credentials" ]
                 ]
         else
             text ""
 
 
-accessTokenStatus model =
-    if model.hasValidAccessToken then
+statusRow : Model -> Html Msg
+statusRow model =
+    if model.isValidatingAccessToken then
         div
-            [ class "alert alert-success" ]
-            [ text "Token valid!"]
+            [ class "text-center"]
+            [ text "Verifying credentials..."
+            , spinner
+            ]
     else
-        div
-            [ class "alert alert-danger" ]
-            [ text "Invalid access token"]
+        text ""
+
+
+accessTokenStatus : Model -> Html Msg
+accessTokenStatus model =
+    case model.hasValidAccessToken of
+        Just hasValidAccessToken ->
+            if hasValidAccessToken then
+                div
+                    [ class "alert alert-success" ]
+                    [ text "Token valid!"]
+            else
+                let
+                    defaultReason = "Username/Token combination invalid"
+                    reason = Maybe.withDefault defaultReason
+                        model.tokenValidationFailureReason
+                in
+                    div
+                        [ class "alert alert-danger" ]
+                        [ strong [] [ text "Invalid access token:" ]
+                        , text <| " " ++ reason
+                        ]
+        Nothing ->
+            text ""
+
+
+spinner : Html Msg
+spinner =
+    div
+        [ class "loader-inner ball-scale" ]
+        [ div [] [] ]
