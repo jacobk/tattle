@@ -58,7 +58,10 @@ if ( TARGET_ENV === 'development' ) {
 
     devServer: {
       inline:   true,
-      progress: true
+      progress: true,
+      proxy: {
+        "*" : `https://api.mblox.com`
+      }
     },
 
     module: {
