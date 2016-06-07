@@ -5,6 +5,6 @@ require( './styles/main.scss' );
 var Elm = require( './Main' );
 var app = Elm.Main.embed( document.getElementById( 'main' ) );
 
-app.ports.localStorage.subscribe(function(msg) {
-  console.log("Hello from elm: " + msg);
-});
+// app.ports.localStorage.subscribe(function(msg) {
+//   console.log("Hello from elm: " + msg);
+// });
