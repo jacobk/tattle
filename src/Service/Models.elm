@@ -1,4 +1,4 @@
-module AccessToken.Models exposing (..)
+module Service.Models exposing (..)
 
 
 type alias Username =
@@ -16,13 +16,21 @@ type Status
     | Invalid String
 
 
-type alias AccessToken =
+type alias Service =
     { username : Username
     , token : Token
     , status : Status
     }
 
 
-init : AccessToken
+init : Service
 init =
-  AccessToken "" "" Init
+  Service "" "" Init
+
+
+-- ROUTING
+
+
+type Route
+    = ServiceIndexRoute Username
+    | SendRoute Username

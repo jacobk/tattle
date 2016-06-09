@@ -6,7 +6,7 @@ type alias Username =
 type alias Token =
     String
 
-type alias AccessToken =
+type alias Service =
     { username: Username
     , token: Token
     }

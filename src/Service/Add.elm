@@ -1,35 +1,31 @@
-module AccessToken.Add exposing (view)
+module Service.Add exposing (view)
 
-import AccessToken.Messages exposing (..)
-import AccessToken.Models exposing (..)
+import Service.Messages exposing (..)
+import Service.Models exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput, onClick )
 import String
 
-view : AccessToken -> Html Msg
-view accessToken =
+view : Service -> Html Msg
+view service =
     div
        [ class "card"]
        [ div
            [ class "card-block" ]
-           [ h4 [ class "card-subtitle text-muted"] [ text "Provide credentials"]
-           ]
-       , div
-           [ class "card-block" ]
            [ div
                []
-               [ accessTokenInput "Service username" "username" accessToken.username ChangeUsername
-               , accessTokenInput "Access Token" "token" accessToken.token ChangeToken
-               , saveButton accessToken
-               , statusRow accessToken
+               [ serviceInput "Service username" "username" service.username ChangeUsername
+               , serviceInput "Access Token" "token" service.token ChangeToken
+               , saveButton service
+               , statusRow service
                ]
            ]
        ]
 
 
-accessTokenInput : String -> String -> String -> (String -> Msg) -> Html Msg
-accessTokenInput labelVal idVal val msg =
+serviceInput : String -> String -> String -> (String -> Msg) -> Html Msg
+serviceInput labelVal idVal val msg =
     fieldset [ class "form-group" ]
         [ label
             [ class "", for idVal ]
@@ -45,28 +41,28 @@ accessTokenInput labelVal idVal val msg =
         ]
 
 
-saveButton : AccessToken -> Html Msg
-saveButton accessToken =
+saveButton : Service -> Html Msg
+saveButton service =
     let
         hasFields : List String -> Bool
         hasFields =
             List.all (not << String.isEmpty)
     in
-        if hasFields [accessToken.username, accessToken.token] then
+        if hasFields [service.username, service.token] then
             fieldset
                 [ class "form-group" ]
                 [ button
                     [ class "btn btn-primary btn-lg form-control"
-                    , onClick SaveAccessToken ]
+                    , onClick SaveService ]
                     [ text "Set Credentials" ]
                 ]
         else
             text ""
 
 
-statusRow : AccessToken -> Html Msg
-statusRow accessToken =
-    case accessToken.status of
+statusRow : Service -> Html Msg
+statusRow service =
+    case service.status of
         Init ->
             text ""
         Validating ->

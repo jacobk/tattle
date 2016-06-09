@@ -1,21 +1,21 @@
-module AccessToken.Commands exposing
+module Service.Commands exposing
     ( validate )
 
 
 import Http
 import Task
-import AccessToken.Models exposing (..)
-import AccessToken.Messages exposing (..)
+import Service.Models exposing (..)
+import Service.Messages exposing (..)
 
 
-validateTask : AccessToken -> Task.Task String Bool
-validateTask accessToken =
+validateTask : Service -> Task.Task String Bool
+validateTask service =
     let
         -- no CORS atm
-        --"https://api.mblox.com/xms/v1/" ++ accessToken.username ++ "/groups"
+        --"https://api.mblox.com/xms/v1/" ++ service.username ++ "/groups"
         url =
-            "/xms/v1/" ++ accessToken.username ++ "/groups"
-        authHeader = "Bearer " ++ accessToken.token
+            "/xms/v1/" ++ service.username ++ "/groups"
+        authHeader = "Bearer " ++ service.token
         request =
             { verb = "OPTIONS"
             , headers = [ ("Authorization", authHeader) ]
@@ -39,8 +39,8 @@ validateTask accessToken =
             `Task.andThen` handleVerifyTokenResp
 
 
-validate : AccessToken -> Cmd Msg
-validate accessToken =
-    validateTask accessToken
+validate : Service -> Cmd Msg
+validate service =
+    validateTask service
         |> Task.perform TokenValidationFailed TokenValidationSuccess
 

@@ -1,10 +1,10 @@
-module AccessToken.Messages exposing (..)
+module Service.Messages exposing (..)
 
-import AccessToken.Models exposing (Username, Token)
+import Service.Models exposing (Username, Token)
 
 type Msg
     = ChangeUsername Username
     | ChangeToken Token
-    | SaveAccessToken
+    | SaveService
     | TokenValidationFailed String
     | TokenValidationSuccess Bool

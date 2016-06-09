@@ -52,7 +52,7 @@ if ( TARGET_ENV === 'development' ) {
   module.exports = merge( commonConfig, {
 
     entry: [
-      'webpack-dev-server/client?http://localhost:8080',
+      'webpack-dev-server/client?http://localhost:4567',
       path.join( __dirname, 'src/index.js' )
     ],
 
@@ -60,8 +60,11 @@ if ( TARGET_ENV === 'development' ) {
       inline:   true,
       progress: true,
       proxy: {
-        "*" : `https://api.mblox.com`
-      }
+        "/xms/*" : `https://api.mblox.com`
+      },
+      historyApiFallback: true,
+      debug: true,
+      port: 4567
     },
 
     module: {
