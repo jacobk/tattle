@@ -8,6 +8,7 @@ import Html.Events exposing (onClick)
 import Messages exposing (..)
 import Models exposing (..)
 import Service.Add
+import Service.List
 
 
 view : AppModel -> Html Msg
@@ -29,8 +30,14 @@ pageView model =
                 [ class "row" ]
                 [ div
                     [ class "col-sm-6 col-sm-offset-3" ]
-                    [ Service.Add.view model.service
-                        |> Html.App.map ServiceMessage ]
+                    [ div
+                       [ class "card"]
+                       [ Service.Add.view model.newService
+                            |> Html.App.map ServiceMessage
+                       , Service.List.view model.services
+                            |> Html.App.map ServiceListMessage
+                       ]
+                    ]
                 ]
 
         ServiceRoutes serviceRoute ->

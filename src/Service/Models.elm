@@ -23,8 +23,8 @@ type alias Service =
     }
 
 
-init : Service
-init =
+new : Service
+new =
   Service "" "" Init
 
 

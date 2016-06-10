@@ -14,7 +14,8 @@ type Route
 type alias AppModel =
     { location : Location
     , route : Route
-    , service : Service.Models.Service
+    , services : List Service.Models.Service
+    , newService : Service.Models.Service
     }
 
 
@@ -22,5 +23,6 @@ newAppModel : Route -> Location -> AppModel
 newAppModel route location =
     { location = location
     , route = route
-    , service = Service.Models.init
+    , services = []
+    , newService = Service.Models.new
     }

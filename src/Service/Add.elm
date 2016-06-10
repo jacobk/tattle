@@ -10,18 +10,15 @@ import String
 view : Service -> Html Msg
 view service =
     div
-       [ class "card"]
-       [ div
-           [ class "card-block" ]
-           [ div
-               []
-               [ serviceInput "Service username" "username" service.username ChangeUsername
-               , serviceInput "Access Token" "token" service.token ChangeToken
-               , saveButton service
-               , statusRow service
-               ]
+        [ class "card-block" ]
+        [ div
+           []
+           [ serviceInput "Service username" "username" service.username ChangeUsername
+           , serviceInput "Access Token" "token" service.token ChangeToken
+           , saveButton service
+           , statusRow service
            ]
-       ]
+        ]
 
 
 serviceInput : String -> String -> String -> (String -> Msg) -> Html Msg
@@ -54,7 +51,7 @@ saveButton service =
                 [ button
                     [ class "btn btn-primary btn-lg form-control"
                     , onClick SaveService ]
-                    [ text "Set Credentials" ]
+                    [ text "Add service" ]
                 ]
         else
             text ""

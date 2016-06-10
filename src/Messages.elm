@@ -1,10 +1,10 @@
 module Messages exposing (..)
 
-import Hop.Types exposing (Location)
 import Service.Messages
-
+import Service.List
 
 
 type Msg
     = ServiceMessage Service.Messages.Msg
+    | ServiceListMessage Service.List.Msg
     | ShowServiceIndex
