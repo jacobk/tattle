@@ -8,3 +8,4 @@ type Msg
     | SaveService
     | TokenValidationFailed String
     | TokenValidationSuccess Bool
+    | Show Username

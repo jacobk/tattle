@@ -1,13 +1,14 @@
 module Models exposing (..)
 
 
-import Hop.Types exposing (Location, newLocation)
+import Hop.Types exposing (Location)
 import Service.Models
 
 
 type Route
     = HomeRoute
     | ServiceRoutes Service.Models.Route
+    | NotFoundRoute
 
 
 type alias AppModel =
@@ -19,9 +20,7 @@ type alias AppModel =
 
 newAppModel : Route -> Location -> AppModel
 newAppModel route location =
-    { location : location
-    , route : route
-    , service : Service.Models.init
+    { location = location
+    , route = route
+    , service = Service.Models.init
     }
-
-

@@ -29,3 +29,6 @@ update msg service =
                 Invalid "Username/Token combination invalid"
         in
             { service | status = status } ! []
+
+    Show username ->
+        (service, Cmd.none)
