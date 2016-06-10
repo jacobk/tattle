@@ -12,21 +12,21 @@ import Service.Models
 
 update : Msg -> AppModel -> (AppModel, Cmd Msg)
 update message model =
-  case message of
-    ServiceMessage msg ->
-        let
-            ( newService, cmd ) =
-                Service.Update.update msg model.newService
-        in
-            ( addNewServiceIfValid newService model
-            , Cmd.map ServiceMessage cmd
-            )
+    case message of
+        ServiceMessage msg ->
+            let
+                ( newService, cmd ) =
+                    Service.Update.update msg model.newService
+            in
+                ( addNewServiceIfValid newService model
+                , Cmd.map ServiceMessage cmd
+                )
 
-    ServiceListMessage msg ->
-        (model, Cmd.none)
+        ServiceListMessage msg ->
+            (model, Cmd.none)
 
-    ShowServiceIndex ->
-        (model, makeUrl Routing.Config.config "/foobar" |> Navigation.newUrl)
+        ShowServiceIndex ->
+            (model, makeUrl Routing.Config.config "/foobar" |> Navigation.newUrl)
 
 
 addNewServiceIfValid : Service.Models.Service -> AppModel -> AppModel
