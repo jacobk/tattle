@@ -8,6 +8,7 @@ import Models exposing (..)
 import Routing.Config
 import Service.Update
 import Service.Models
+import Service.List
 
 
 update : Msg -> AppModel -> (AppModel, Cmd Msg)
@@ -23,7 +24,13 @@ update message model =
                 )
 
         ServiceListMessage msg ->
-            (model, Cmd.none)
+            let
+                ( servicesMeta, cmd ) =
+                    Service.List.update msg model.servicesMeta
+            in
+                (,) { model | servicesMeta = servicesMeta }
+                    <| Cmd.map ServiceListMessage cmd
+
 
         ShowServiceIndex ->
             (model, makeUrl Routing.Config.config "/foobar" |> Navigation.newUrl)
