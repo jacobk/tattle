@@ -23,9 +23,19 @@ type alias Service =
     }
 
 
+type alias ServicesMeta =
+    { quickLinksIdx : Maybe Int
+    }
+
+
 new : Service
 new =
   Service "" "" Init
+
+
+newServicesMeta : ServicesMeta
+newServicesMeta =
+    ServicesMeta Nothing
 
 
 -- ROUTING
@@ -34,3 +44,4 @@ new =
 type Route
     = ServiceIndexRoute Username
     | SendRoute Username
+    | NotFoundRoute

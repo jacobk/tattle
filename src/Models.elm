@@ -3,7 +3,7 @@ module Models exposing (..)
 
 import Hop.Types exposing (Location)
 import Service.Models
-import Service.List
+--import Service.List
 
 
 type Route
@@ -16,7 +16,7 @@ type alias AppModel =
     { location : Location
     , route : Route
     , services : List Service.Models.Service
-    , servicesMeta : Service.List.Model
+    , servicesMeta : Service.Models.ServicesMeta
     , newService : Service.Models.Service
     }
 
@@ -26,7 +26,7 @@ newAppModel route location =
     { location = location
     , route = route
     , services = mock
-    , servicesMeta = Service.List.new
+    , servicesMeta = Service.Models.newServicesMeta
     , newService = Service.Models.new
     }
 

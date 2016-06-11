@@ -1,38 +1,31 @@
 module Service.List exposing (..)
 
-import Service.Models exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput, onClick, onMouseEnter, onMouseLeave )
-import Debug
+import Routing.Utils exposing (transitionToCmd)
+import Service.Models exposing (..)
+import Service.Routing.Utils
+
 
 type Msg
-    = Show Username
+    = TransitionToService Username
     | ShowQuickLinks Int
     | HideQuickLinks Int
-
-
--- MODEL
-
-
-type alias Model =
-    { quickLinksIdx : Maybe Int
-    }
-
-
-new : Model
-new =
-    Model Nothing
 
 
 -- UPDATE
 
 
-update : Msg -> Model -> (Model, Cmd Msg)
+update : Msg -> ServicesMeta -> (ServicesMeta, Cmd Msg)
 update msg model =
     case msg of
-        Show username ->
-            (model, Cmd.none)
+        TransitionToService username ->
+            let
+                path =
+                    Service.Routing.Utils.reverse (ServiceIndexRoute username)
+            in
+                (model, transitionToCmd path)
 
         ShowQuickLinks idx ->
             { model | quickLinksIdx = Just idx } ! []
@@ -44,7 +37,7 @@ update msg model =
 -- VIEW
 
 
-view : List (Service) -> Model -> Html Msg
+view : List (Service) -> ServicesMeta -> Html Msg
 view services model =
     case services of
         [] ->
@@ -58,12 +51,12 @@ view services model =
                 ( List.indexedMap (serviceRow model) services)
 
 
-serviceRow : Model -> Int -> Service -> Html Msg
+serviceRow : ServicesMeta -> Int -> Service -> Html Msg
 serviceRow model idx service =
     a
         [ class "list-group-item"
         , href "#"
-        , onClick <| Show service.username
+        , onClick <| TransitionToService service.username
         , onMouseEnter <| ShowQuickLinks idx
         , onMouseLeave <| HideQuickLinks idx
         ]
@@ -72,7 +65,7 @@ serviceRow model idx service =
         ]
 
 
-quickLinks : Model -> Int -> Service -> Html Msg
+quickLinks : ServicesMeta -> Int -> Service -> Html Msg
 quickLinks model idx service =
     case model.quickLinksIdx of
         Nothing ->

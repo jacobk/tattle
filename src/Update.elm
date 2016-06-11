@@ -6,21 +6,21 @@ import Navigation
 import Messages exposing (..)
 import Models exposing (..)
 import Routing.Config
-import Service.Update
 import Service.Models
+import Service.Add
 import Service.List
 
 
 update : Msg -> AppModel -> (AppModel, Cmd Msg)
 update message model =
     case message of
-        ServiceMessage msg ->
+        ServiceAddMessage msg ->
             let
                 ( newService, cmd ) =
-                    Service.Update.update msg model.newService
+                    Service.Add.update msg model.newService
             in
                 ( addNewServiceIfValid newService model
-                , Cmd.map ServiceMessage cmd
+                , Cmd.map ServiceAddMessage cmd
                 )
 
         ServiceListMessage msg ->

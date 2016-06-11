@@ -33,7 +33,7 @@ pageView model =
                     [ div
                        [ class "card"]
                        [ Service.Add.view model.newService
-                            |> Html.App.map ServiceMessage
+                            |> Html.App.map ServiceAddMessage
                        , Service.List.view model.services model.servicesMeta
                             |> Html.App.map ServiceListMessage
                        ]

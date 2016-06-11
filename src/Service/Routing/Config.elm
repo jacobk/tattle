@@ -5,16 +5,16 @@ import Hop.Matchers exposing (..)
 import Service.Models exposing (..)
 
 
-matcherService : PathMatcher Route
-matcherService =
+matcherServiceIndex : PathMatcher Route
+matcherServiceIndex =
     match2 ServiceIndexRoute "/" str
 
 
-matcherServiceSend : PathMatcher Route
-matcherServiceSend =
+matcherSend : PathMatcher Route
+matcherSend =
     match3 SendRoute "/" str "/send"
 
 
 matchers : List (PathMatcher Route)
 matchers =
-    [matcherService, matcherServiceSend]
+    [matcherServiceIndex, matcherSend]

@@ -1,11 +1,55 @@
-module Service.Add exposing (view)
+module Service.Add exposing (..)
 
-import Service.Messages exposing (..)
-import Service.Models exposing (..)
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput, onClick )
+import Http
+import Task
 import String
+
+
+import Service.Models exposing (..)
+
+
+type Msg
+    = ChangeUsername Username
+    | ChangeToken Token
+    | SaveService
+    | TokenValidationFailed String
+    | TokenValidationSuccess Bool
+
+
+-- UPDATE
+
+
+update : Msg -> Service -> (Service, Cmd Msg)
+update msg service =
+  case msg of
+    ChangeUsername username ->
+        { service | username = username } ! []
+
+    ChangeToken token ->
+        { service | token = token } ! []
+
+    SaveService ->
+        { service | status = Validating } ! [validate service]
+
+    TokenValidationFailed reason ->
+        { service | status = Invalid reason } ! []
+
+    TokenValidationSuccess isValid ->
+        let
+            status = if isValid then
+                Valid
+            else
+                Invalid "Username/Token combination invalid"
+        in
+            { service | status = status } ! []
+
+
+-- VIEW
+
 
 view : Service -> Html Msg
 view service =
@@ -85,3 +129,44 @@ spinner =
     div
         [ class "loader-inner ball-scale" ]
         [ div [] [] ]
+
+
+-- COMMANDS
+
+
+validateTask : Service -> Task.Task String Bool
+validateTask service =
+    let
+        -- no CORS atm
+        --"https://api.mblox.com/xms/v1/" ++ service.username ++ "/groups"
+        url =
+            "/xms/v1/" ++ service.username ++ "/groups"
+        authHeader = "Bearer " ++ service.token
+        request =
+            { verb = "OPTIONS"
+            , headers = [ ("Authorization", authHeader) ]
+            , url = url
+            , body = Http.empty
+            }
+
+        promoteError _ =
+            "Request failed"
+
+        handleVerifyTokenResp : Http.Response -> Task.Task String Bool
+        handleVerifyTokenResp response =
+            if response.status == 200 then
+                Task.succeed True
+            else if response.status == 401 then
+                Task.succeed False
+            else
+                Task.fail "Unexpected response code"
+    in
+        Task.mapError promoteError (Http.send Http.defaultSettings request)
+            `Task.andThen` handleVerifyTokenResp
+
+
+validate : Service -> Cmd Msg
+validate service =
+    validateTask service
+        |> Task.perform TokenValidationFailed TokenValidationSuccess
+
