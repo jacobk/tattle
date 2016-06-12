@@ -1,11 +1,9 @@
 module Update exposing (..)
 
 
-import Hop exposing (makeUrl)
-import Navigation
 import Messages exposing (..)
 import Models exposing (..)
-import Routing.Config
+import Routing exposing (transitionToCmd)
 import Service.Models
 import Service.Add
 import Service.List
@@ -28,12 +26,13 @@ update message model =
                 ( servicesMeta, cmd ) =
                     Service.List.update msg model.servicesMeta
             in
-                (,) { model | servicesMeta = servicesMeta }
-                    <| Cmd.map ServiceListMessage cmd
+                ( { model | servicesMeta = servicesMeta }
+                , Cmd.map ServiceListMessage cmd
+                )
 
 
         ShowServiceIndex ->
-            (model, makeUrl Routing.Config.config "/foobar" |> Navigation.newUrl)
+            (model, transitionToCmd "/foobar")
 
 
 addNewServiceIfValid : Service.Models.Service -> AppModel -> AppModel

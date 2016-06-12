@@ -3,7 +3,7 @@ module Service.List exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput, onClick, onMouseEnter, onMouseLeave )
-import Routing.Utils exposing (transitionToCmd)
+import Routing exposing (transitionToCmd)
 import Service.Models exposing (..)
 import Service.Route exposing (..)
 
@@ -23,7 +23,7 @@ update msg model =
         TransitionToService username ->
             let
                 path =
-                    Service.Route.reverse (ServiceIndexRoute username)
+                    ServiceIndexRoute username |> Service.Route.reverse
             in
                 (model, transitionToCmd path)
 

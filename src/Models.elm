@@ -2,15 +2,8 @@ module Models exposing (..)
 
 
 import Hop.Types exposing (Location)
+import Route exposing (Route)
 import Service.Models
-import Service.Route
---import Service.List
-
-
-type Route
-    = HomeRoute
-    | ServiceRoutes Service.Route.Route
-    | NotFoundRoute
 
 
 type alias AppModel =

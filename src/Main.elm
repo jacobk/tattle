@@ -1,15 +1,15 @@
 module Main exposing (..)
 
 import Navigation
-import Hop exposing (matchUrl)
+import Hop
 import Hop.Types
 
-
-import Messages exposing (..)
-import Models exposing (..)
-import View exposing (..)
+import Messages exposing (Msg)
+import Models exposing (AppModel, newAppModel)
+import Route
+import Routing exposing (config)
 import Update exposing (..)
-import Routing.Config exposing (..)
+import View exposing (..)
 
 
 main : Program Never
@@ -22,12 +22,13 @@ main =
         , subscriptions = always Sub.none }
 
 
-init : (Route, Hop.Types.Location) -> (AppModel, Cmd Msg)
+init : (Route.Route, Hop.Types.Location) -> (AppModel, Cmd Msg)
 init (route, location) =
     (newAppModel route location, Cmd.none)
 
 
-urlUpdate : (Route, Hop.Types.Location) -> AppModel -> (AppModel, Cmd Msg)
+
+urlUpdate : (Route.Route, Hop.Types.Location) -> AppModel -> (AppModel, Cmd Msg)
 urlUpdate (route, location) model =
     let
         _ =
@@ -36,10 +37,10 @@ urlUpdate (route, location) model =
         ({ model | route = route, location = location }, Cmd.none)
 
 
-urlParser : Navigation.Parser (Route, Hop.Types.Location)
+urlParser : Navigation.Parser (Route.Route, Hop.Types.Location)
 urlParser =
     let
         _ =
             Debug.log "GIMME A PARSER!"
     in
-        Navigation.makeParser (.href >> matchUrl config)
+        Navigation.makeParser (.href >> Hop.matchUrl config)
