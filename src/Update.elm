@@ -5,8 +5,8 @@ import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (transitionToCmd)
 import Service.Models
-import Service.Add
-import Service.List
+import Service.Components.Add
+import Service.Components.List
 
 
 update : Msg -> AppModel -> (AppModel, Cmd Msg)
@@ -15,7 +15,7 @@ update message model =
         ServiceAddMessage msg ->
             let
                 ( newService, cmd ) =
-                    Service.Add.update msg model.newService
+                    Service.Components.Add.update msg model.newService
             in
                 ( addNewServiceIfValid newService model
                 , Cmd.map ServiceAddMessage cmd
@@ -24,12 +24,11 @@ update message model =
         ServiceListMessage msg ->
             let
                 ( servicesMeta, cmd ) =
-                    Service.List.update msg model.servicesMeta
+                    Service.Components.List.update msg model.servicesMeta
             in
                 ( { model | servicesMeta = servicesMeta }
                 , Cmd.map ServiceListMessage cmd
                 )
-
 
         ShowServiceIndex ->
             (model, transitionToCmd "/foobar")

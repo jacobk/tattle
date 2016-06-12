@@ -1,4 +1,4 @@
-module Service.Add exposing (..)
+module Service.Components.Add exposing (..)
 
 
 import Html exposing (..)

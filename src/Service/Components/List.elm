@@ -1,4 +1,4 @@
-module Service.List exposing (..)
+module Service.Components.List exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

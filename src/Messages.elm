@@ -1,10 +1,10 @@
 module Messages exposing (..)
 
-import Service.Add
-import Service.List
+import Service.Components.Add
+import Service.Components.List
 
 
 type Msg
-    = ServiceAddMessage Service.Add.Msg
-    | ServiceListMessage Service.List.Msg
+    = ServiceAddMessage Service.Components.Add.Msg
+    | ServiceListMessage Service.Components.List.Msg
     | ShowServiceIndex
