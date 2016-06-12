@@ -8,7 +8,7 @@ import Html.Events exposing (onClick)
 import Messages exposing (..)
 import Models exposing (..)
 import Route exposing (Route(..))
-import Service.Components.Add
+import Service.Components.New
 import Service.Components.List
 
 
@@ -33,8 +33,8 @@ pageView model =
                     [ class "col-sm-6 col-sm-offset-3" ]
                     [ div
                        [ class "card"]
-                       [ Service.Components.Add.view model.newService
-                            |> Html.App.map ServiceAddMessage
+                       [ Service.Components.New.view model.newService
+                            |> Html.App.map ServiceNewMessage
                        , Service.Components.List.view model.services model.servicesMeta
                             |> Html.App.map ServiceListMessage
                        ]

@@ -5,20 +5,20 @@ import Messages exposing (..)
 import Models exposing (..)
 import Routing exposing (transitionToCmd)
 import Service.Models
-import Service.Components.Add
+import Service.Components.New
 import Service.Components.List
 
 
 update : Msg -> AppModel -> (AppModel, Cmd Msg)
 update message model =
     case message of
-        ServiceAddMessage msg ->
+        ServiceNewMessage msg ->
             let
                 ( newService, cmd ) =
-                    Service.Components.Add.update msg model.newService
+                    Service.Components.New.update msg model.newService
             in
                 ( addNewServiceIfValid newService model
-                , Cmd.map ServiceAddMessage cmd
+                , Cmd.map ServiceNewMessage cmd
                 )
 
         ServiceListMessage msg ->
