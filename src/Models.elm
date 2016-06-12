@@ -3,12 +3,13 @@ module Models exposing (..)
 
 import Hop.Types exposing (Location)
 import Service.Models
+import Service.Route
 --import Service.List
 
 
 type Route
     = HomeRoute
-    | ServiceRoutes Service.Models.Route
+    | ServiceRoutes Service.Route.Route
     | NotFoundRoute
 
 

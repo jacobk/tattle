@@ -3,7 +3,7 @@ module Routing.Config exposing (..)
 import Hop.Types exposing (Config, Location, PathMatcher)
 import Hop.Matchers exposing (..)
 import Models exposing (..)
-import Service.Routing.Config
+import Service.Route
 
 
 config : Config Route
@@ -22,7 +22,7 @@ matcherHome =
 
 matcherService : PathMatcher Route
 matcherService =
-    nested1 ServiceRoutes "" Service.Routing.Config.matchers
+    nested1 ServiceRoutes "" Service.Route.matchers
 
 
 matchers : List (PathMatcher Route)

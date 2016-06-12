@@ -36,12 +36,3 @@ new =
 newServicesMeta : ServicesMeta
 newServicesMeta =
     ServicesMeta Nothing
-
-
--- ROUTING
-
-
-type Route
-    = ServiceIndexRoute Username
-    | SendRoute Username
-    | NotFoundRoute
