@@ -4,39 +4,32 @@
 
 ## Sitemap
 
-`/ -> HomeRoute (aliased /services ServicesIndexRoute)`
-
-
- - List of services
- - Add form
- - No topnav
-
-`/{username} -> ServiceRoutes ServiceIndexRoute`
-
-- Show service + access token
-- Maybe edit
-
-`/{username}/send -> ServiceRoutes SendRoute`
-
-- Show composer
-
-`/{username}/history -> ServiceRoutes HistoryRoutes HistoryIndexRoute`
-
-- List sent batches
-
-`/{username}/history/{id} -> ServiceRoutes HistoryRoutes BatchId`
-
-- Show individual batch
-
-`/{username}/groups -> ServiceRoutes GroupsRoutes GroupsIndexRoute`
-
-- Groups etc.
-- TBD
-
+```elm
+type Route
+  = Home -- `/`
+  | Services -- `/services`
+      -- Always used, provides UI-nesting/children
+      -- {services : List Service}
+    = Index -- `/services/`
+      -- Never children
+    | Service String -- `/services/{username}`
+        -- UI wrapping (sub-navigation)
+        -- {service: Service}
+      = Index -- `/services/{username}/`
+        -- Show service + accesstoken
+      | Send  -- `/services/{username}/send`
+        -- {service: Service ,groups: List Group}
+      | Batches  -- `/services/{username}/batches`
+        = Index -- `/services/{username}/batches/`
+          -- list batches
+          -- {service: Service ,batches: List Batch}
+        | Batch String -- `/services/{username}/batches/{batch-id}`
+```
 
 ## TODO
 
 - [ ] Fully specify sitemap
+- [ ] Compare componate data passing to Redux's `connect(mapStateToProps,...)`
 
 ## Slum
 
