@@ -1,8 +1,10 @@
 module Services.Components.List exposing (..)
 
+import Json.Decode as Json
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing ( onInput, onClick, onMouseEnter, onMouseLeave )
+import Html.Events exposing ( onInput, onWithOptions, onMouseEnter,
+    onMouseLeave, defaultOptions )
 import Routing exposing (transitionToCmd)
 import Services.Models exposing (..)
 
@@ -54,16 +56,24 @@ view services model =
 
 serviceRow : ServicesMeta -> Int -> Service -> Html Msg
 serviceRow model idx service =
-    a
-        [ class "list-group-item"
-        , href "#"
-        , onClick <| TransitionToService service.username
-        , onMouseEnter <| ShowQuickLinks idx
-        , onMouseLeave <| HideQuickLinks idx
-        ]
-        [ text service.username
-        , quickLinks model idx service
-        ]
+    let
+        options =
+            { defaultOptions
+            | preventDefault = True
+            }
+    in
+        a
+            [ class "list-group-item"
+            , href "#"
+            , onWithOptions "click" options
+                <| Json.succeed
+                <| TransitionToService service.username
+            , onMouseEnter <| ShowQuickLinks idx
+            , onMouseLeave <| HideQuickLinks idx
+            ]
+            [ text service.username
+            , quickLinks model idx service
+            ]
 
 
 quickLinks : ServicesMeta -> Int -> Service -> Html Msg

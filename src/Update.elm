@@ -3,7 +3,6 @@ module Update exposing (..)
 
 import Messages exposing (..)
 import Models exposing (..)
-import Routing exposing (transitionToCmd)
 import Services.Models
 import Services.Components.New
 import Services.Components.List
