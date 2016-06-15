@@ -24,5 +24,5 @@ config =
 
 transitionToCmd : String -> Cmd a
 transitionToCmd path =
-    makeUrl config path
+    makeUrl config (Debug.log "transitionToCmd" path)
         |> Navigation.modifyUrl

@@ -3,7 +3,7 @@ module Route exposing (..)
 import Hop exposing (..)
 import Hop.Types exposing (Config, PathMatcher)
 import Hop.Matchers exposing (..)
-import Service.Route
+import Services.Route
 
 
 -- MODEL
@@ -11,7 +11,7 @@ import Service.Route
 
 type Route
     = HomeRoute
-    | ServiceRoutes Service.Route.Route
+    | ServicesRoutes Services.Route.Route
     | NotFoundRoute
 
 
@@ -20,17 +20,19 @@ type Route
 
 matcherHome : PathMatcher Route
 matcherHome =
-    match1 HomeRoute ""
+    match1 HomeRoute "/home"
 
 
-matcherService : PathMatcher Route
-matcherService =
-    nested1 ServiceRoutes "" Service.Route.matchers
+matcherServices : PathMatcher Route
+matcherServices =
+    nested1 ServicesRoutes "/services" Services.Route.matchers
 
 
 matchers : List (PathMatcher Route)
 matchers =
-    [matcherHome, matcherService]
+    [ matcherHome
+    , matcherServices
+    ]
 
 
 -- REVERSE
@@ -42,12 +44,13 @@ reverse route =
         HomeRoute ->
             matcherToPath matcherHome []
 
-        ServiceRoutes subRoute ->
-            let
-                parentPath = matcherToPath matcherService []
-                subPath = Service.Route.reverse subRoute
-            in
-                parentPath ++ subPath
+        ServicesRoutes subRoute ->
+            "ballefjongberga"
+            --let
+            --    parentPath = matcherToPath matcherService []
+            --    subPath = Services.Route.reverse subRoute
+            --in
+            --    parentPath ++ subPath
 
         NotFoundRoute ->
             ""

@@ -1,4 +1,4 @@
-module Service.Models exposing (..)
+module Services.Models exposing (..)
 
 
 type alias Username =

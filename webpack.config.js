@@ -16,6 +16,7 @@ var commonConfig = {
   output: {
     path:       path.resolve( __dirname, 'dist/' ),
     filename: '[hash].js',
+    publicPath: '/'
   },
 
   resolve: {
@@ -64,7 +65,8 @@ if ( TARGET_ENV === 'development' ) {
       },
       historyApiFallback: true,
       debug: true,
-      port: 4567
+      port: 4567,
+      verbose: true
     },
 
     module: {

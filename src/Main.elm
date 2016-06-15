@@ -7,7 +7,7 @@ import Hop.Types
 import Messages exposing (Msg)
 import Models exposing (AppModel, newAppModel)
 import Route
-import Routing exposing (config)
+import Routing exposing (config, transitionToCmd)
 import Update exposing (..)
 import View exposing (..)
 
@@ -32,15 +32,18 @@ urlUpdate : (Route.Route, Hop.Types.Location) -> AppModel -> (AppModel, Cmd Msg)
 urlUpdate (route, location) model =
     let
         _ =
+            Debug.log "route" route
+        _ =
             Debug.log "urlUpdate location" location
+        -- redirectCmd = case route of
+        --     Route.HomeRoute ->
+        --         transitionToCmd "/services/"
+        --     _ ->
+        --         Cmd.none
     in
         ({ model | route = route, location = location }, Cmd.none)
 
 
 urlParser : Navigation.Parser (Route.Route, Hop.Types.Location)
 urlParser =
-    let
-        _ =
-            Debug.log "GIMME A PARSER!"
-    in
-        Navigation.makeParser (.href >> Hop.matchUrl config)
+    Navigation.makeParser (.href >> Hop.matchUrl config)

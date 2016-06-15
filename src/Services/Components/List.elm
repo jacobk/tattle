@@ -1,11 +1,10 @@
-module Service.Components.List exposing (..)
+module Services.Components.List exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing ( onInput, onClick, onMouseEnter, onMouseLeave )
 import Routing exposing (transitionToCmd)
-import Service.Models exposing (..)
-import Service.Route exposing (..)
+import Services.Models exposing (..)
 
 
 type Msg
@@ -22,8 +21,10 @@ update msg model =
     case msg of
         TransitionToService username ->
             let
-                path =
-                    ServiceIndexRoute username |> Service.Route.reverse
+                -- path =
+                --     Route.ServiceRoute username |> Route.reverse
+                path = "/services/" ++ username
+                _ = Debug.log "path" path
             in
                 (model, transitionToCmd path)
 

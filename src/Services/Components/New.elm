@@ -1,4 +1,4 @@
-module Service.Components.New exposing (..)
+module Services.Components.New exposing (..)
 
 
 import Html exposing (..)
@@ -9,7 +9,7 @@ import Task
 import String
 
 
-import Service.Models exposing (..)
+import Services.Models exposing (..)
 
 
 type Msg
@@ -169,4 +169,3 @@ validate : Service -> Cmd Msg
 validate service =
     validateTask service
         |> Task.perform TokenValidationFailed TokenValidationSuccess
-

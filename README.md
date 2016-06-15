@@ -6,24 +6,24 @@
 
 ```elm
 type Route
-  = Home -- `/`
-  | Services -- `/services`
+  = HomeRoute -- `/`
+  | ServicesRoutes -- `/services`
       -- Always used, provides UI-nesting/children
       -- {services : List Service}
-    = Index -- `/services/`
+    = IndexRoute -- `/services/`
       -- Never children
-    | Service String -- `/services/{username}`
+    | ServiceRoutes String -- `/services/{username}`
         -- UI wrapping (sub-navigation)
         -- {service: Service}
-      = Index -- `/services/{username}/`
+      = IndexRoute -- `/services/{username}/`
         -- Show service + accesstoken
-      | Send  -- `/services/{username}/send`
+      | SendRoute  -- `/services/{username}/send`
         -- {service: Service ,groups: List Group}
-      | Batches  -- `/services/{username}/batches`
-        = Index -- `/services/{username}/batches/`
+      | BatchesRoutes  -- `/services/{username}/batches`
+        = IndexRoute -- `/services/{username}/batches/`
           -- list batches
           -- {service: Service ,batches: List Batch}
-        | Batch String -- `/services/{username}/batches/{batch-id}`
+        | BatchRoute String -- `/services/{username}/batches/{batch-id}`
 ```
 
 ## TODO
