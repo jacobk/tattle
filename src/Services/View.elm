@@ -9,36 +9,23 @@ import Services.Models exposing (..)
 import Services.Route exposing(Route(..))
 import Services.Messages exposing (..)
 import Services.Service.View
+import Services.Service.Route
 
 
-type alias ViewModel =
+type alias Context =
     { services : List Service
     , route : Services.Route.Route
     }
 
 
-view : ViewModel -> Html Msg
+view : Context -> Html Msg
 view ctx =
-    pageView ctx
-
--- view : ViewModel -> Html Msg
--- view model =
---     div
---         []
---         [ nav
---             [ class "navbar navbar-static-top navbar-dark bg-inverse" ]
---             [ a
---                 [ class "navbar-brand" ]
---                 [ strong [] [ text "{" ]
---                 , text model.service.username
---                 , strong [] [ text "}"]
---                 ]
---             ]
---         , childView model
---         ]
+    div
+        [ class "container" ]
+        [ pageView ctx ]
 
 
-pageView : ViewModel -> Html Msg
+pageView : Context -> Html Msg
 pageView ctx =
     case ctx.route of
         IndexRoute ->
@@ -53,19 +40,30 @@ pageView ctx =
                 case service of
                     Nothing -> h1 [] [ text "Not Found 404 " ]
                     Just service ->
-                        Services.Service.View.view
-                            { service = service
-                            , route = subRoute
-                            }
-                            |> Html.App.map ServiceMsg
+                        div
+                            []
+                            [ topNav service
+                            , childView service subRoute
+                            ]
 
 
-
-childView : ViewModel -> Html Msg
-childView model =
+topNav : Service -> Html Msg
+topNav service =
     nav
-        [ class "navbar navbar-static-top navbar-light bg-faded text-center" ]
+        [ class "navbar navbar-static-top navbar-dark bg-inverse text-center" ]
         [ a
             [ class "navbar-brand" ]
-            [ text "yolo" ]
+            [ text service.username ]
         ]
+
+
+childView : Service -> Services.Service.Route.Route -> Html Msg
+childView service subRoute =
+    let
+        childCtx =
+            { service = service
+            , route = subRoute
+            }
+    in
+        Services.Service.View.view childCtx
+            |> Html.App.map ServiceMsg

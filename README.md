@@ -30,6 +30,7 @@ type Route
 
 - [ ] Fully specify sitemap
 - [ ] Compare componate data passing to Redux's `connect(mapStateToProps,...)`
+- [ ] Use Dict for services models
 
 ## Slum
 

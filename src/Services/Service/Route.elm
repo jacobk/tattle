@@ -11,7 +11,6 @@ import Hop.Matchers exposing (..)
 type Route
     = IndexRoute
     | SendRoute
-    | NotFoundRoute
 
 
 -- MATCHERS
@@ -24,7 +23,7 @@ matcherIndex =
 
 matcherSendRoute : PathMatcher Route
 matcherSendRoute =
-    match1 SendRoute "/"
+    match1 SendRoute "/send"
 
 
 matchers : List (PathMatcher Route)
@@ -45,6 +44,3 @@ reverse route =
 
         SendRoute ->
             "sendroutereverse"
-
-        NotFoundRoute ->
-            ""

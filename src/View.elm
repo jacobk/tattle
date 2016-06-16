@@ -26,7 +26,7 @@ pageView model =
     case model.route of
         HomeRoute ->
             div
-              [ class "container-fluid" ]
+              [ class "container" ]
               [ div
                     [ class "row" ]
                     [ div
@@ -51,21 +51,6 @@ pageView model =
             in
               Services.View.view viewModel
                   |> Html.App.map ServicesMsg
-
-        -- ServiceRoute username ->
-        --     let
-        --         service = model.services
-        --             |> List.filter (.username >> (==) username)
-        --             |> List.head
-        --     in
-        --         case service of
-        --             Just service ->
-        --                 Services.View.view { service = service }
-        --                     |> Html.App.map ServiceMsg
-        --
-        --             Nothing ->
-        --                 h1 [] [ text ("Cant find service " ++ username) ]
-
 
         NotFoundRoute ->
             h1 [] [ text "404"]
