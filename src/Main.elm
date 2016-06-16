@@ -30,18 +30,7 @@ init (route, location) =
 
 urlUpdate : (Route.Route, Hop.Types.Location) -> AppModel -> (AppModel, Cmd Msg)
 urlUpdate (route, location) model =
-    let
-        _ =
-            Debug.log "route" route
-        _ =
-            Debug.log "urlUpdate location" location
-        -- redirectCmd = case route of
-        --     Route.HomeRoute ->
-        --         transitionToCmd "/services/"
-        --     _ ->
-        --         Cmd.none
-    in
-        ({ model | route = route, location = location }, Cmd.none)
+    ({ model | route = route, location = location }, Cmd.none)
 
 
 urlParser : Navigation.Parser (Route.Route, Hop.Types.Location)

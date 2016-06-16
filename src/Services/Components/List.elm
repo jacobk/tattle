@@ -26,7 +26,6 @@ update msg model =
                 -- path =
                 --     Route.ServiceRoute username |> Route.reverse
                 path = "/services/" ++ username
-                _ = Debug.log "path" path
             in
                 (model, transitionToCmd path)
 

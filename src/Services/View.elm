@@ -46,8 +46,6 @@ pageView ctx =
 
         ServiceRoutes username subRoute ->
             let
-                _ = Debug.log "Username" username
-                _ = Debug.log "subRoute" subRoute
                 service = ctx.services
                     |> List.filter (.username >> (==) username)
                     |> List.head
